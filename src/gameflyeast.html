@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <title>Fly East</title>
+    <script src="flyeast.js" type="text/javascript"></script>
+
+    <style>
+    #game {
+        font-family: "Arial";
+        position: relative;
+        display: table;
+        margin: 0 auto;
+    }
+    #mapView {
+        width: 320px;
+        height: 200px;
+    }
+    .destination {
+        height: 3em;
+        width: 280px;
+        background-color: #20a0f0;
+        margin: 10px 20px;
+        text-align: center;
+        color: #f0f0f0;
+        -webkit-user-select: none;
+        cursor: pointer;
+    }
+    #itinerary {
+        table-layout: fixed;
+        width: 310px;
+        font-size: 10pt;
+    }
+    #itinerary th {
+        text-align: left;
+        width: 70px;
+    }
+    #itinerary td,
+    #itinerary th {
+        height: 1rem;
+    }
+    #itinerary tr:nth-child(odd) {
+        background: #eee;
+    }
+    .ontop {
+        display: none;
+        font-weight: bold;
+        position: absolute;
+        width: 310px;
+        height: 200px;
+        left: 0;
+        top: 0;
+        text-align: center;
+        text-shadow: 0px 0px 5px #fff;
+        -webkit-user-select: none;
+        cursor: pointer;
+        color: #303030;
+    }
+    .announce {
+        font-size: 40pt;
+    }
+    #control {
+        position: relative;
+    }
+    .countryFont {
+        font-size: 10pt;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="game">
+        <canvas id="mapView"></canvas>
+        <table id="itinerary">
+            <tr>
+                <th>HOME:</th>
+                <td>
+                    <div id="home"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>DISTANCE:</th>
+                <td>
+                    <div id="distance"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>VISITED:</th>
+                <td>
+                    <div id="visited"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>FROM:</th>
+                <td>
+                    <div id="from"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>TO:</th>
+                <td>
+                    <div id="to">... which destination is east?
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div id="control">
+            <div id="destination1" class="destination" data-index="0"></div>
+            <div id="destination2" class="destination" data-index="1"></div>
+            <div id="help" class="ontop">
+                Select the destination
+                <br />to the EAST of
+                <br />the FROM location
+                <br />
+                <span class="announce">Continue</span>
+            </div>
+            <div id="win" class="ontop">
+                <span class="announce">WINNER!!</span>
+            </div>
+            <div id="lose" class="ontop">You flew west!
+                <br />
+                <span class="announce">Try Again</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
