@@ -26,6 +26,7 @@ module FlyEast {
         from: Place = null;
         destinationList: Place[] = [null, null];
         winDestination: number = 0; // index into destinationList
+        bonus: number = 0;
     }
 
     var mapCanvas = null;
@@ -37,6 +38,7 @@ module FlyEast {
     var mapViewCtx = null;
     var mapDotRadius = 4;
     var mapLineWidth = 1;
+    var LOSE_BONUS_RATIO = 0.5;
 
     enum GameState {
         NewGame, Normal, Lose, Win
@@ -341,13 +343,13 @@ module FlyEast {
         lon: 14.22,
         rank: 1
     }, {
-        country: "Democratic People's Republic of Korea",
+        country: "North Korea",
         city: "P'yongyang",
         lat: 39.09,
         lon: 125.30,
         rank: 1
     }, {
-        country: "Democratic Republic of the Congo",
+        country: "Congo",
         city: "Kinshasa",
         lat: -4.20,
         lon: 15.15,
@@ -1340,8 +1342,7 @@ module FlyEast {
         mapCtx.stroke();
     }
 
-    function selectDestination() {
-        var index: number = this.getAttribute("data-index");
+    function selectDestinationInternal(index) {
         var destination: Place = itinerary.destinationList[index];
 
         // overwrite old city circle - so we don't get confused
@@ -1366,7 +1367,14 @@ module FlyEast {
                 pickTwoDestinations(itinerary.from);
             }
         }
+    }
 
+    function selectDestination() {
+        var index: number = this.getAttribute("data-index");
+        selectDestinationInternal(index);
+        itinerary.bonus = Math.floor(itinerary.visited * LOSE_BONUS_RATIO);
+
+        var destination: Place = itinerary.destinationList[index];
         centerMapOnCity(destination);
         updateHTML();
     }
@@ -1377,8 +1385,8 @@ module FlyEast {
             destinationElements[i].addEventListener("click", selectDestination);
         }
 
-        document.getElementById("win").addEventListener("click", newGame);
-        document.getElementById("lose").addEventListener("click", newGame);
+        document.getElementById("win").addEventListener("click", restartGame);
+        document.getElementById("lose").addEventListener("click", restartGame);
         document.getElementById("help").addEventListener("click", resumeGame);
     }
 
@@ -1388,6 +1396,7 @@ module FlyEast {
         document.getElementById("distance").innerHTML = itinerary.distance.toString() + " km";
         document.getElementById("visited").innerHTML = itinerary.visited.toString();
         document.getElementById("from").innerHTML = itinerary.from.city + " (" + itinerary.from.country + ")";
+        document.getElementById("bonus").innerHTML = itinerary.bonus.toString();
 
         for (var i = 0; i < itinerary.destinationList.length; i++) {
             var destination: Place = itinerary.destinationList[i];
@@ -1533,7 +1542,7 @@ module FlyEast {
         setupHTML();
     }
 
-    function newGame() {
+    function baseGame() {
         freeCityList.length = 0;
         for (var i: number = 0; i < cityList.length; i++) {
             freeCityList.push(cityList[i]);
@@ -1546,24 +1555,35 @@ module FlyEast {
         itinerary.distance = 0;
 
         removeCityFromList(itinerary.from, freeCityList);
-        pickTwoDestinations(itinerary.home);
 
         mapCtx.drawImage(mapImg, 0, 0, mapWidth, mapHeight);
         drawCityCircle(itinerary.home, mapDotRadius, "yellow");
+    }
 
-        // // debug
-        // mapCtx.strokeStyle = "#FFFFFF";
-        // mapCtx.lineWidth = 1;
-        // for (var i: number = 0; i < cityList.length; i++) {
-        //     var pos = latLonToXY(cityList[i].lat, cityList[i].lon);
-        //     mapCtx.beginPath();
-        //     mapCtx.rect(pos.x - 1, pos.y - 1, 2, 2);
-        //     mapCtx.stroke();
-        // }
+    function newGame() {
+        baseGame();
+        itinerary.bonus = 0;
+
+        pickTwoDestinations(itinerary.home);
 
         centerMapOnCity(itinerary.from);
 
         gameState = GameState.NewGame;
+        updateHTML();
+    }
+
+    function restartGame() {
+        baseGame();
+
+        // start with some bonus stops
+        for (var i: number = 0; i < itinerary.bonus; ++i) {
+            pickTwoDestinations(itinerary.from);
+            selectDestinationInternal(itinerary.winDestination);
+        }
+
+        centerMapOnCity(itinerary.from);
+
+        gameState = GameState.Normal;
         updateHTML();
     }
 
