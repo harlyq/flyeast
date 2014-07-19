@@ -2,6 +2,7 @@ var gutil = require('gulp-util');
 var gulp = require('gulp');
 var tsc = require('gulp-typescript-compiler');
 var uglify = require('gulp-uglify');
+var zip = require('gulp-zip');
 
 gulp.task('typescript', function() {
     return gulp
@@ -46,6 +47,12 @@ gulp.task('watch', function() {
     gulp.watch('src/*.jpg', ['images']);
 });
 
+gulp.task('zip', function() {
+    return gulp.src('dist/*.!(zip)')
+        .pipe(zip('archive.zip'))
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('default', ['typescript', 'html', 'images', 'watch']);
 
-gulp.task('final', ['typescript_final', 'html', 'images']);
+gulp.task('final', ['typescript_final', 'html', 'images', 'zip']);
