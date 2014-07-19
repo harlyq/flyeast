@@ -1,1 +1,1603 @@
-var FlyEast;!function(){function n(n){var a=0,t=0;a=n.lat>0?Math.floor(n.lat):Math.ceil(n.lat),t=n.lon>0?Math.floor(n.lon):Math.ceil(n.lon),n.lat=a+(n.lat-a)/.6,n.lon=t+(n.lon-t)/.6}function a(){for(var a=K.length-1;a>=0;a--)n(K[a]);K.sort(function(n,a){return n.lon-a.lon})}function t(n,a){var t=a.indexOf(n);-1==t&&alert("city not in list"),a.splice(t,1)}function o(n,a){return{x:L*(a/360+.5),y:I*(.5-n/180)}}function r(n,a){var t=a-n;return-180>t?360+t:t>180?t-360:t}function l(n,a){var t=6371,o=n.lat/180*Math.PI,r=n.lon/180*Math.PI,l=a.lat/180*Math.PI,i=a.lon/180*Math.PI,c=.5*(l-o),y=.5*(i-r),e=Math.sin(y),u=Math.sin(c),k=u*u+Math.cos(o)*Math.cos(l)*e*e,s=2*Math.atan2(Math.sqrt(k),Math.sqrt(1-k));return Math.round(t*s)}function i(n,a,t){var r=o(n.lat,n.lon),l=o(a.lat,a.lon);p.strokeStyle=t,p.lineWidth=E,p.beginPath(),p.moveTo(r.x,r.y),a.lon>n.lon?p.lineTo(l.x,l.y):(p.lineTo(l.x+L,l.y),p.moveTo(r.x-L,r.y),p.lineTo(l.x,l.y)),p.stroke()}function c(n){var a=G.destinationList[n];G.from!=G.home&&s(G.from,C,"#f04000"),n!=G.winDestination?(D=2,i(a,G.from,"white")):(G.distance+=l(G.from,a),G.visited++,i(G.from,a,"#f04000"),G.from=a,t(a,z),s(a,C,"white"),0==z.length?D=3:h(G.from))}function y(){var n=this.getAttribute("data-index");c(n),G.bonus=Math.floor(G.visited*N);var a=G.destinationList[n];k(a),u()}function e(){for(var n=document.getElementsByClassName("destination"),a=n.length-1;a>=0;a--)n[a].addEventListener("click",y);document.getElementById("win").addEventListener("click",v),document.getElementById("lose").addEventListener("click",v),document.getElementById("help").addEventListener("click",M)}function u(){var n="0.4";document.getElementById("home").innerHTML=G.home.city+" ("+G.home.country+")",document.getElementById("distance").innerHTML=G.distance.toString()+" km",document.getElementById("visited").innerHTML=G.visited.toString(),document.getElementById("from").innerHTML=G.from.city+" ("+G.from.country+")",document.getElementById("bonus").innerHTML=G.bonus.toString();for(var a=0;a<G.destinationList.length;a++){var t=G.destinationList[a],o="";null!=t&&(o=G.destinationList[a].city+'<br />(<span class="countryFont">'+G.destinationList[a].country+"</span>)");var r=document.getElementById("destination"+(a+1));r.innerHTML=o}var l="none",i="none",c="none",y=n,e=n;switch(D){case 0:l="block";break;case 1:y="1.0",e="1.0";break;case 3:i="block";break;case 2:c="block"}document.getElementById("destination1").style.opacity=y,document.getElementById("destination2").style.opacity=e,document.getElementById("help").style.display=l,document.getElementById("win").style.display=i,document.getElementById("lose").style.display=c}function k(n){var a=o(n.lat,n.lon),t=A.height/I,r=.5*A.width-a.x*t;T.drawImage(S,r,0,L*t,I*t),T.drawImage(S,r-L*t,0,L*t,I*t),T.drawImage(S,r+L*t,0,L*t,I*t)}function s(n,a,t){var r=o(n.lat,n.lon);p.strokeStyle="#000000",p.fillStyle=t,p.lineWidth=2,p.beginPath(),p.arc(r.x,r.y,a,0,2*Math.PI),p.stroke(),p.fill()}function d(n){return n[Math.floor(Math.random()*n.length)]}function m(n,a){for(var t=50,o=40,r=5,l=z.length-1;l>=0;l--){var i=z[l];if(i==n)i.weight=1e4;else{var c=a(i);0>c&&(c+=360),i.weight=i.rank*t+c}}var y=z.sort(function(n,a){return n.weight-a.weight}),e=y[0].weight+o*y[0].rank;return y=y.filter(function(n,a){return r>a&&n.weight<e})}function h(n){var a=10,t=m(n,function(t){return r(n.lon,t.lon-a)}),o=m(n,function(t){return-r(n.lon,t.lon+a)});if(0==t.length)return alert("need a better algorithm for pickTwoDestinations()"),void(D=2);var l=Math.random()>.5?1:0;G.destinationList[l]=d(t),G.destinationList[1-l]=d(o),G.winDestination=l}function g(){a(),e()}function f(){z.length=0;for(var n=0;n<K.length;n++)z.push(K[n]);G.home=d(z),G.from=G.home,G.visited=0,G.distance=0,t(G.from,z),p.drawImage(P,0,0,L,I),s(G.home,C,"yellow")}function b(){f(),G.bonus=0,h(G.home),k(G.from),D=0,u()}function v(){f();for(var n=0;n<G.bonus;++n)h(G.from),c(G.winDestination);k(G.from),D=1,u()}function M(){D=1,u()}var B,w=function(){function n(){this.home=null,this.distance=0,this.visited=0,this.from=null,this.destinationList=[null,null],this.winDestination=0,this.bonus=0}return n}(),S=null,p=null,L=0,I=0,P=null,A=null,T=null,C=4,E=1,N=.5;!function(n){n[n.NewGame=0]="NewGame",n[n.Normal=1]="Normal",n[n.Lose=2]="Lose",n[n.Win=3]="Win"}(B||(B={}));var D=0,G=new w,K=[{country:"Afghanistan",city:"Kabul",lat:34.28,lon:69.11,rank:1},{country:"Albania",city:"Tirane",lat:41.18,lon:19.49,rank:2},{country:"Algeria",city:"Algiers",lat:36.42,lon:3.08,rank:1},{country:"American Samoa",city:"Pago Pago",lat:-14.16,lon:-170.43,rank:3},{country:"Andorra",city:"Andorra la Vella",lat:42.31,lon:1.32,rank:3},{country:"Angola",city:"Luanda",lat:-8.5,lon:13.15,rank:3},{country:"Antigua and Barbuda",city:"Saint John's",lat:17.7,lon:-61.51,rank:3},{country:"Argentina",city:"Buenos Aires",lat:-36.3,lon:-60,rank:1},{country:"Armenia",city:"Yerevan",lat:40.1,lon:44.31,rank:3},{country:"Aruba",city:"Oranjestad",lat:12.32,lon:-70.02,rank:3},{country:"Australia",city:"Canberra",lat:-35.15,lon:149.08,rank:1},{country:"Austria",city:"Vienna",lat:48.12,lon:16.22,rank:1},{country:"Azerbaijan",city:"Baku",lat:40.29,lon:49.56,rank:3},{country:"Bahamas",city:"Nassau",lat:25.05,lon:-77.2,rank:2},{country:"Bahrain",city:"Manama",lat:26.1,lon:50.3,rank:3},{country:"Bangladesh",city:"Dhaka",lat:23.43,lon:90.26,rank:2},{country:"Barbados",city:"Bridgetown",lat:13.05,lon:-59.3,rank:3},{country:"Belarus",city:"Minsk",lat:53.52,lon:27.3,rank:2},{country:"Belgium",city:"Brussels",lat:50.51,lon:4.21,rank:1},{country:"Belize",city:"Belmopan",lat:17.18,lon:-88.3,rank:3},{country:"Benin",city:"Porto-Novo",lat:6.23,lon:2.42,rank:3},{country:"Bhutan",city:"Thimphu",lat:27.31,lon:89.45,rank:3},{country:"Bolivia",city:"La Paz",lat:-16.2,lon:-68.1,rank:3},{country:"Bosnia and Herzegovina",city:"Sarajevo",lat:43.52,lon:18.26,rank:2},{country:"Botswana",city:"Gaborone",lat:-24.45,lon:25.57,rank:3},{country:"Brazil",city:"Brasilia",lat:-15.47,lon:-47.52,rank:2},{country:"British Virgin Islands",city:"Road Town",lat:18.27,lon:-64.37,rank:3},{country:"Brunei Darussalam",city:"Bandar Seri Begawan",lat:4.52,lon:115,rank:3},{country:"Bulgaria",city:"Sofia",lat:42.45,lon:23.2,rank:1},{country:"Burkina Faso",city:"Ouagadougou",lat:12.15,lon:-1.3,rank:3},{country:"Burundi",city:"Bujumbura",lat:-3.16,lon:29.18,rank:2},{country:"Cambodia",city:"Phnom Penh",lat:11.33,lon:104.55,rank:1},{country:"Cameroon",city:"Yaounde",lat:3.5,lon:11.35,rank:2},{country:"Canada",city:"Ottawa",lat:45.27,lon:-75.42,rank:1},{country:"Cape Verde",city:"Praia",lat:15.02,lon:-23.34,rank:3},{country:"Cayman Islands",city:"George Town",lat:19.2,lon:-81.24,rank:2},{country:"Central African Republic",city:"Bangui",lat:4.23,lon:18.35,rank:3},{country:"Chad",city:"N'Djamena",lat:12.1,lon:14.59,rank:3},{country:"Chile",city:"Santiago",lat:-33.24,lon:-70.4,rank:1},{country:"China",city:"Beijing",lat:39.55,lon:116.2,rank:1},{country:"Colombia",city:"Bogota",lat:4.34,lon:-74,rank:1},{country:"Comros",city:"Moroni",lat:-11.4,lon:43.16,rank:3},{country:"Congo",city:"Brazzaville",lat:-4.09,lon:15.12,rank:2},{country:"Costa Rica",city:"San Jose",lat:9.55,lon:-84.02,rank:1},{country:"Cote d'Ivoire",city:"Yamoussoukro",lat:6.49,lon:-5.17,rank:3},{country:"Croatia",city:"Zagreb",lat:45.5,lon:15.58,rank:1},{country:"Cuba",city:"Havana",lat:23.08,lon:-82.22,rank:1},{country:"Cyprus",city:"Nicosia",lat:35.1,lon:33.25,rank:2},{country:"Czech Republic",city:"Prague",lat:50.05,lon:14.22,rank:1},{country:"North Korea",city:"P'yongyang",lat:39.09,lon:125.3,rank:1},{country:"Congo",city:"Kinshasa",lat:-4.2,lon:15.15,rank:2},{country:"Denmark",city:"Copenhagen",lat:55.41,lon:12.34,rank:1},{country:"Djibouti",city:"Djibouti",lat:11.08,lon:42.2,rank:3},{country:"Dominica",city:"Roseau",lat:15.2,lon:-61.24,rank:3},{country:"Dominica Republic",city:"Santo Domingo",lat:18.3,lon:-69.59,rank:2},{country:"East Timor",city:"Dili",lat:-8.29,lon:125.34,rank:2},{country:"Ecuador",city:"Quito",lat:-.15,lon:-78.35,rank:1},{country:"Egypt",city:"Cairo",lat:30.01,lon:31.14,rank:1},{country:"El Salvador",city:"San Salvador",lat:13.4,lon:-89.1,rank:1},{country:"Equatorial Guinea",city:"Malabo",lat:3.45,lon:8.5,rank:2},{country:"Eritrea",city:"Asmara",lat:15.19,lon:38.55,rank:2},{country:"Estonia",city:"Tallinn",lat:59.22,lon:24.48,rank:2},{country:"Ethiopia",city:"Addis Ababa",lat:9.02,lon:38.42,rank:2},{country:"Falkland Islands",city:"Stanley",lat:-51.4,lon:-59.51,rank:2},{country:"Faroe Islands",city:"Torshavn",lat:62.05,lon:-6.56,rank:3},{country:"Fiji",city:"Suva",lat:-18.06,lon:178.3,rank:3},{country:"Finland",city:"Helsinki",lat:60.15,lon:25.03,rank:1},{country:"France",city:"Paris",lat:48.5,lon:2.2,rank:1},{country:"French Guiana",city:"Cayenne",lat:5.05,lon:-52.18,rank:3},{country:"French Polynesia",city:"Papeete",lat:-17.32,lon:-149.34,rank:3},{country:"Gabon",city:"Libreville",lat:.25,lon:9.26,rank:3},{country:"Gambia",city:"Banjul",lat:13.28,lon:-16.4,rank:3},{country:"Georgia",city:"T'bilisi",lat:41.43,lon:44.5,rank:2},{country:"Macao",city:"Macau",lat:22.12,lon:113.33,rank:3},{country:"Republic of Moldova",city:"Chisinau",lat:47.02,lon:28.5,rank:3},{country:"Germany",city:"Berlin",lat:52.3,lon:13.25,rank:1},{country:"Ghana",city:"Accra",lat:5.35,lon:-.06,rank:3},{country:"Greece",city:"Athens",lat:37.58,lon:23.46,rank:1},{country:"Greenland",city:"Nuuk",lat:64.1,lon:-51.35,rank:2},{country:"Guadeloupe",city:"Basse-Terre",lat:16,lon:-61.44,rank:3},{country:"Guatemala",city:"Guatemala",lat:14.4,lon:-90.22,rank:1},{country:"Guernsey",city:"St. Peter Port",lat:49.26,lon:-2.33,rank:2},{country:"Guinea",city:"Conakry",lat:9.29,lon:-13.49,rank:3},{country:"Guinea-Bissau",city:"Bissau",lat:11.45,lon:-15.45,rank:3},{country:"Guyana",city:"Georgetown",lat:6.5,lon:-58.12,rank:3},{country:"Haiti",city:"Port-au-Prince",lat:18.4,lon:-72.2,rank:1},{country:"Honduras",city:"Tegucigalpa",lat:14.05,lon:-87.14,rank:1},{country:"Hungary",city:"Budapest",lat:47.29,lon:19.05,rank:1},{country:"Iceland",city:"Reykjavik",lat:64.1,lon:-21.57,rank:1},{country:"India",city:"New Delhi",lat:28.37,lon:77.13,rank:1},{country:"Indonesia",city:"Jakarta",lat:-6.09,lon:106.49,rank:1},{country:"Iran",city:"Tehran",lat:35.44,lon:51.3,rank:1},{country:"Iraq",city:"Baghdad",lat:33.2,lon:44.3,rank:1},{country:"Ireland",city:"Dublin",lat:53.21,lon:-6.15,rank:1},{country:"Israel",city:"Jerusalem",lat:31.47,lon:35.12,rank:1},{country:"Italy",city:"Rome",lat:41.54,lon:12.29,rank:1},{country:"Japan",city:"Tokyo",lat:35.41,lon:139.41,rank:1},{country:"Jamaica",city:"Kingston",lat:18,lon:-76.5,rank:1},{country:"Jordan",city:"Amman",lat:31.57,lon:35.52,rank:2},{country:"Kazakhstan",city:"Astana",lat:51.1,lon:71.3,rank:2},{country:"Kenya",city:"Nairobi",lat:-1.17,lon:36.48,rank:1},{country:"Kiribati",city:"Tarawa",lat:1.3,lon:173,rank:2},{country:"Kuwait",city:"Kuwait",lat:29.3,lon:48,rank:2},{country:"Kyrgyzstan",city:"Bishkek",lat:42.54,lon:74.46,rank:3},{country:"Laos",city:"Vientiane",lat:17.58,lon:102.36,rank:1},{country:"Latvia",city:"Riga",lat:56.53,lon:24.08,rank:2},{country:"Lebanon",city:"Beirut",lat:33.53,lon:35.31,rank:1},{country:"Lesotho",city:"Maseru",lat:-29.18,lon:27.3,rank:3},{country:"Liberia",city:"Monrovia",lat:6.18,lon:-10.47,rank:2},{country:"Libya",city:"Tripoli",lat:32.54,lon:13.11,rank:2},{country:"Liechtenstein",city:"Vaduz",lat:47.08,lon:9.31,rank:2},{country:"Lithuania",city:"Vilnius",lat:54.38,lon:25.19,rank:2},{country:"Luxembourg",city:"Luxembourg",lat:49.37,lon:6.09,rank:1},{country:"Madagascar",city:"Antananarivo",lat:-18.55,lon:47.31,rank:2},{country:"Malawi",city:"Lilongwe",lat:-14,lon:33.48,rank:3},{country:"Malaysia",city:"Kuala Lumpur",lat:3.09,lon:101.41,rank:1},{country:"Maldives",city:"Male",lat:4,lon:73.28,rank:2},{country:"Mali",city:"Bamako",lat:12.34,lon:-7.55,rank:3},{country:"Malta",city:"Valletta",lat:35.54,lon:14.31,rank:2},{country:"Martinique",city:"Fort-de-France",lat:14.36,lon:-61.02,rank:3},{country:"Mauritania",city:"Nouakchott",lat:-20.1,lon:57.3,rank:3},{country:"Mayotte",city:"Mamoudzou",lat:-12.48,lon:45.14,rank:3},{country:"Mexico",city:"Mexico",lat:19.2,lon:-99.1,rank:1},{country:"Fed. States of Micronesia",city:"Palikir",lat:6.55,lon:158.09,rank:3},{country:"Mozambique",city:"Maputo",lat:-25.58,lon:32.32,rank:2},{country:"Myanmar",city:"Yangon",lat:16.45,lon:96.2,rank:3},{country:"Namibia",city:"Windhoek",lat:-22.35,lon:17.04,rank:2},{country:"Nepal",city:"Kathmandu",lat:27.45,lon:85.2,rank:1},{country:"Netherlands Antilles",city:"Willemstad",lat:12.05,lon:-69,rank:3},{country:"Netherlands",city:"Amsterdam",lat:52.23,lon:4.54,rank:1},{country:"New Caledonia",city:"Noumea",lat:-22.17,lon:166.3,rank:2},{country:"New Zealand",city:"Wellington",lat:-41.19,lon:174.46,rank:1},{country:"Nicaragua",city:"Managua",lat:12.06,lon:-86.2,rank:2},{country:"Niger",city:"Niamey",lat:13.27,lon:2.06,rank:2},{country:"Nigeria",city:"Abuja",lat:9.05,lon:7.32,rank:2},{country:"Norfolk Island",city:"Kingston",lat:-45.2,lon:168.43,rank:3},{country:"Northern Mariana Islands",city:"Saipan",lat:15.12,lon:145.45,rank:3},{country:"Norway",city:"Oslo",lat:59.55,lon:10.45,rank:1},{country:"Oman",city:"Masqat",lat:23.37,lon:58.36,rank:2},{country:"Pakistan",city:"Islamabad",lat:33.4,lon:73.1,rank:1},{country:"Palau",city:"Koror",lat:7.2,lon:134.28,rank:3},{country:"Panama",city:"Panama",lat:9,lon:-79.25,rank:1},{country:"Papua New Guinea",city:"Port Moresby",lat:-9.24,lon:147.08,rank:1},{country:"Paraguay",city:"Asuncion",lat:-25.1,lon:-57.3,rank:1},{country:"Peru",city:"Lima",lat:-12,lon:-77,rank:1},{country:"Philippines",city:"Manila",lat:14.4,lon:121.03,rank:1},{country:"Poland",city:"Warsaw",lat:52.13,lon:21,rank:1},{country:"Portugal",city:"Lisbon",lat:38.42,lon:-9.1,rank:1},{country:"Puerto Rico",city:"San Juan",lat:18.28,lon:-66.07,rank:2},{country:"Qatar",city:"Doha",lat:25.15,lon:51.35,rank:2},{country:"Rawanda",city:"Kigali",lat:-1.59,lon:30.04,rank:2},{country:"Republic of Korea",city:"Seoul",lat:37.31,lon:126.58,rank:1},{country:"Romania",city:"Bucuresti",lat:44.27,lon:26.1,rank:1},{country:"Russian Federation",city:"Moskva",lat:55.45,lon:37.35,rank:1},{country:"Saint Kitts and Nevis",city:"Basseterre",lat:17.17,lon:-62.43,rank:3},{country:"Saint Lucia",city:"Castries",lat:14.02,lon:-60.58,rank:3},{country:"Saint Pierre and Miquelon",city:"Saint-Pierre",lat:46.46,lon:-56.12,rank:3},{country:"Saint Vincent ...",city:"Kingstown",lat:13.1,lon:-61.1,rank:3},{country:"Samoa",city:"Apia",lat:-13.5,lon:-171.5,rank:3},{country:"San Marino",city:"San Marino",lat:43.55,lon:12.3,rank:2},{country:"Sao Tome and Principe",city:"Sao Tome",lat:.1,lon:6.39,rank:3},{country:"Saudi Arabia",city:"Riyadh",lat:24.41,lon:46.42,rank:1},{country:"Senegal",city:"Dakar",lat:14.34,lon:-17.29,rank:2},{country:"Sierra Leone",city:"Freetown",lat:8.3,lon:-13.17,rank:2},{country:"Slovakia",city:"Bratislava",lat:48.1,lon:17.07,rank:2},{country:"Slovenia",city:"Ljubljana",lat:46.04,lon:14.33,rank:2},{country:"Solomon Islands",city:"Honiara",lat:-9.27,lon:159.57,rank:3},{country:"Somalia",city:"Mogadishu",lat:2.02,lon:45.25,rank:2},{country:"South Africa",city:"Pretoria",lat:-25.44,lon:28.12,rank:1},{country:"Spain",city:"Madrid",lat:40.25,lon:-3.45,rank:1},{country:"Sudan",city:"Khartoum",lat:15.31,lon:32.35,rank:1},{country:"Suriname",city:"Paramaribo",lat:5.5,lon:-55.1,rank:2},{country:"Swaziland",city:"Mbabane",lat:-26.18,lon:31.06,rank:2},{country:"Sweden",city:"Stockholm",lat:59.2,lon:18.03,rank:1},{country:"Switzerland",city:"Bern",lat:46.57,lon:7.28,rank:1},{country:"Syrian Arab Republic",city:"Damascus",lat:33.3,lon:36.18,rank:2},{country:"Tajikistan",city:"Dushanbe",lat:38.33,lon:68.48,rank:2},{country:"Thailand",city:"Bangkok",lat:13.45,lon:100.35,rank:1},{country:"Republic of Macedonia",city:"Skopje",lat:42.01,lon:21.26,rank:2},{country:"Togo",city:"Lome",lat:6.09,lon:1.2,rank:3},{country:"Tonga",city:"Nuku'alofa",lat:-21.1,lon:-174,rank:3},{country:"Tunisia",city:"Tunis",lat:36.5,lon:10.11,rank:1},{country:"Turkey",city:"Ankara",lat:39.57,lon:32.54,rank:1},{country:"Turkmenistan",city:"Ashgabat",lat:38,lon:57.5,rank:2},{country:"Tuvalu",city:"Funafuti",lat:-8.31,lon:179.13,rank:3},{country:"Uganda",city:"Kampala",lat:.2,lon:32.3,rank:1},{country:"Ukraine",city:"Kiev",lat:50.3,lon:30.28,rank:1},{country:"United Arab Emirates",city:"Abu Dhabi",lat:24.28,lon:54.22,rank:1},{country:"United Kingdom",city:"London",lat:51.36,lon:-.05,rank:1},{country:"Tanzania",city:"Dodoma",lat:-6.08,lon:35.45,rank:2},{country:"USA",city:"Washington DC",lat:39.91,lon:-77.02,rank:1},{country:"Virgin Islands",city:"Charlotte Amalie",lat:18.21,lon:-64.56,rank:3},{country:"Uruguay",city:"Montevideo",lat:-34.5,lon:-56.11,rank:1},{country:"Uzbekistan",city:"Tashkent",lat:41.2,lon:69.1,rank:2},{country:"Vanuatu",city:"Port-Vila",lat:-17.45,lon:168.18,rank:3},{country:"Venezuela",city:"Caracas",lat:10.3,lon:-66.55,rank:1},{country:"Viet Nam",city:"Hanoi",lat:21.05,lon:105.55,rank:1},{country:"Yugoslavia",city:"Belgrade",lat:44.5,lon:20.37,rank:1},{country:"Zambia",city:"Lusaka",lat:-15.28,lon:28.16,rank:2},{country:"Zimbabwe",city:"Harare",lat:-17.43,lon:31.02,rank:1}],z=[];window.onload=function(){g(),S=document.createElement("canvas"),p=S.getContext("2d"),A=document.getElementById("mapView"),T=A.getContext("2d"),P=new Image,P.onload=function(){L=P.width,I=P.height,S.width=L,S.height=I,C=.02*I,E=.01*I,b()},P.src="world-map-b1.jpg"}}(FlyEast||(FlyEast={}));
+// copyright 2014 Reece Elliott
+var FlyEast;
+(function (FlyEast) {
+    var Itinerary = (function () {
+        function Itinerary() {
+            this.home = null;
+            this.distance = 0;
+            this.visited = 0;
+            this.from = null;
+            this.destinationList = [null, null];
+            this.winDestination = 0;
+            this.bonus = 0;
+        }
+        return Itinerary;
+    })();
+
+    var mapCanvas = null;
+    var mapCtx = null;
+    var mapWidth = 0;
+    var mapHeight = 0;
+    var mapImg = null;
+    var mapViewElement = null;
+    var mapViewCtx = null;
+    var mapDotRadius = 4;
+    var mapLineWidth = 1;
+    var LOSE_BONUS_RATIO = 0.5;
+
+    var GameState;
+    (function (GameState) {
+        GameState[GameState["NewGame"] = 0] = "NewGame";
+        GameState[GameState["Normal"] = 1] = "Normal";
+        GameState[GameState["Lose"] = 2] = "Lose";
+        GameState[GameState["Win"] = 3] = "Win";
+    })(GameState || (GameState = {}));
+    ;
+
+    var gameState = 0 /* NewGame */;
+
+    var itinerary = new Itinerary();
+
+    var cityList = [
+        {
+            country: "Afghanistan",
+            city: "Kabul",
+            lat: 34.28,
+            lon: 69.11,
+            rank: 1
+        }, {
+            country: "Albania",
+            city: "Tirane",
+            lat: 41.18,
+            lon: 19.49,
+            rank: 2
+        }, {
+            country: "Algeria",
+            city: "Algiers",
+            lat: 36.42,
+            lon: 3.08,
+            rank: 1
+        }, {
+            country: "American Samoa",
+            city: "Pago Pago",
+            lat: -14.16,
+            lon: -170.43,
+            rank: 3
+        }, {
+            country: "Andorra",
+            city: "Andorra la Vella",
+            lat: 42.31,
+            lon: 1.32,
+            rank: 3
+        }, {
+            country: "Angola",
+            city: "Luanda",
+            lat: -8.50,
+            lon: 13.15,
+            rank: 3
+        }, {
+            country: "Antigua and Barbuda",
+            city: "Saint John's",
+            lat: 17.7,
+            lon: -61.51,
+            rank: 3
+        }, {
+            country: "Argentina",
+            city: "Buenos Aires",
+            lat: -36.30,
+            lon: -60.00,
+            rank: 1
+        }, {
+            country: "Armenia",
+            city: "Yerevan",
+            lat: 40.10,
+            lon: 44.31,
+            rank: 3
+        }, {
+            country: "Aruba",
+            city: "Oranjestad",
+            lat: 12.32,
+            lon: -70.02,
+            rank: 3
+        }, {
+            country: "Australia",
+            city: "Canberra",
+            lat: -35.15,
+            lon: 149.08,
+            rank: 1
+        }, {
+            country: "Austria",
+            city: "Vienna",
+            lat: 48.12,
+            lon: 16.22,
+            rank: 1
+        }, {
+            country: "Azerbaijan",
+            city: "Baku",
+            lat: 40.29,
+            lon: 49.56,
+            rank: 3
+        }, {
+            country: "Bahamas",
+            city: "Nassau",
+            lat: 25.05,
+            lon: -77.20,
+            rank: 2
+        }, {
+            country: "Bahrain",
+            city: "Manama",
+            lat: 26.10,
+            lon: 50.30,
+            rank: 3
+        }, {
+            country: "Bangladesh",
+            city: "Dhaka",
+            lat: 23.43,
+            lon: 90.26,
+            rank: 2
+        }, {
+            country: "Barbados",
+            city: "Bridgetown",
+            lat: 13.05,
+            lon: -59.30,
+            rank: 3
+        }, {
+            country: "Belarus",
+            city: "Minsk",
+            lat: 53.52,
+            lon: 27.30,
+            rank: 2
+        }, {
+            country: "Belgium",
+            city: "Brussels",
+            lat: 50.51,
+            lon: 4.21,
+            rank: 1
+        }, {
+            country: "Belize",
+            city: "Belmopan",
+            lat: 17.18,
+            lon: -88.30,
+            rank: 3
+        }, {
+            country: "Benin",
+            city: "Porto-Novo",
+            lat: 6.23,
+            lon: 2.42,
+            rank: 3
+        }, {
+            country: "Bhutan",
+            city: "Thimphu",
+            lat: 27.31,
+            lon: 89.45,
+            rank: 3
+        }, {
+            country: "Bolivia",
+            city: "La Paz",
+            lat: -16.20,
+            lon: -68.10,
+            rank: 3
+        }, {
+            country: "Bosnia and Herzegovina",
+            city: "Sarajevo",
+            lat: 43.52,
+            lon: 18.26,
+            rank: 2
+        }, {
+            country: "Botswana",
+            city: "Gaborone",
+            lat: -24.45,
+            lon: 25.57,
+            rank: 3
+        }, {
+            country: "Brazil",
+            city: "Brasilia",
+            lat: -15.47,
+            lon: -47.52,
+            rank: 2
+        }, {
+            country: "British Virgin Islands",
+            city: "Road Town",
+            lat: 18.27,
+            lon: -64.37,
+            rank: 3
+        }, {
+            country: "Brunei Darussalam",
+            city: "Bandar Seri Begawan",
+            lat: 4.52,
+            lon: 115.00,
+            rank: 3
+        }, {
+            country: "Bulgaria",
+            city: "Sofia",
+            lat: 42.45,
+            lon: 23.20,
+            rank: 1
+        }, {
+            country: "Burkina Faso",
+            city: "Ouagadougou",
+            lat: 12.15,
+            lon: -1.30,
+            rank: 3
+        }, {
+            country: "Burundi",
+            city: "Bujumbura",
+            lat: -3.16,
+            lon: 29.18,
+            rank: 2
+        }, {
+            country: "Cambodia",
+            city: "Phnom Penh",
+            lat: 11.33,
+            lon: 104.55,
+            rank: 1
+        }, {
+            country: "Cameroon",
+            city: "Yaounde",
+            lat: 3.50,
+            lon: 11.35,
+            rank: 2
+        }, {
+            country: "Canada",
+            city: "Ottawa",
+            lat: 45.27,
+            lon: -75.42,
+            rank: 1
+        }, {
+            country: "Cape Verde",
+            city: "Praia",
+            lat: 15.02,
+            lon: -23.34,
+            rank: 3
+        }, {
+            country: "Cayman Islands",
+            city: "George Town",
+            lat: 19.20,
+            lon: -81.24,
+            rank: 2
+        }, {
+            country: "Central African Republic",
+            city: "Bangui",
+            lat: 4.23,
+            lon: 18.35,
+            rank: 3
+        }, {
+            country: "Chad",
+            city: "N'Djamena",
+            lat: 12.10,
+            lon: 14.59,
+            rank: 3
+        }, {
+            country: "Chile",
+            city: "Santiago",
+            lat: -33.24,
+            lon: -70.40,
+            rank: 1
+        }, {
+            country: "China",
+            city: "Beijing",
+            lat: 39.55,
+            lon: 116.20,
+            rank: 1
+        }, {
+            country: "Colombia",
+            city: "Bogota",
+            lat: 4.34,
+            lon: -74.00,
+            rank: 1
+        }, {
+            country: "Comros",
+            city: "Moroni",
+            lat: -11.40,
+            lon: 43.16,
+            rank: 3
+        }, {
+            country: "Congo",
+            city: "Brazzaville",
+            lat: -4.09,
+            lon: 15.12,
+            rank: 2
+        }, {
+            country: "Costa Rica",
+            city: "San Jose",
+            lat: 9.55,
+            lon: -84.02,
+            rank: 1
+        }, {
+            country: "Cote d'Ivoire",
+            city: "Yamoussoukro",
+            lat: 6.49,
+            lon: -5.17,
+            rank: 3
+        }, {
+            country: "Croatia",
+            city: "Zagreb",
+            lat: 45.50,
+            lon: 15.58,
+            rank: 1
+        }, {
+            country: "Cuba",
+            city: "Havana",
+            lat: 23.08,
+            lon: -82.22,
+            rank: 1
+        }, {
+            country: "Cyprus",
+            city: "Nicosia",
+            lat: 35.10,
+            lon: 33.25,
+            rank: 2
+        }, {
+            country: "Czech Republic",
+            city: "Prague",
+            lat: 50.05,
+            lon: 14.22,
+            rank: 1
+        }, {
+            country: "North Korea",
+            city: "P'yongyang",
+            lat: 39.09,
+            lon: 125.30,
+            rank: 1
+        }, {
+            country: "Congo",
+            city: "Kinshasa",
+            lat: -4.20,
+            lon: 15.15,
+            rank: 2
+        }, {
+            country: "Denmark",
+            city: "Copenhagen",
+            lat: 55.41,
+            lon: 12.34,
+            rank: 1
+        }, {
+            country: "Djibouti",
+            city: "Djibouti",
+            lat: 11.08,
+            lon: 42.20,
+            rank: 3
+        }, {
+            country: "Dominica",
+            city: "Roseau",
+            lat: 15.20,
+            lon: -61.24,
+            rank: 3
+        }, {
+            country: "Dominica Republic",
+            city: "Santo Domingo",
+            lat: 18.30,
+            lon: -69.59,
+            rank: 2
+        }, {
+            country: "East Timor",
+            city: "Dili",
+            lat: -8.29,
+            lon: 125.34,
+            rank: 2
+        }, {
+            country: "Ecuador",
+            city: "Quito",
+            lat: -0.15,
+            lon: -78.35,
+            rank: 1
+        }, {
+            country: "Egypt",
+            city: "Cairo",
+            lat: 30.01,
+            lon: 31.14,
+            rank: 1
+        }, {
+            country: "El Salvador",
+            city: "San Salvador",
+            lat: 13.40,
+            lon: -89.10,
+            rank: 1
+        }, {
+            country: "Equatorial Guinea",
+            city: "Malabo",
+            lat: 3.45,
+            lon: 8.50,
+            rank: 2
+        }, {
+            country: "Eritrea",
+            city: "Asmara",
+            lat: 15.19,
+            lon: 38.55,
+            rank: 2
+        }, {
+            country: "Estonia",
+            city: "Tallinn",
+            lat: 59.22,
+            lon: 24.48,
+            rank: 2
+        }, {
+            country: "Ethiopia",
+            city: "Addis Ababa",
+            lat: 9.02,
+            lon: 38.42,
+            rank: 2
+        }, {
+            country: "Falkland Islands",
+            city: "Stanley",
+            lat: -51.40,
+            lon: -59.51,
+            rank: 2
+        }, {
+            country: "Faroe Islands",
+            city: "Torshavn",
+            lat: 62.05,
+            lon: -6.56,
+            rank: 3
+        }, {
+            country: "Fiji",
+            city: "Suva",
+            lat: -18.06,
+            lon: 178.30,
+            rank: 3
+        }, {
+            country: "Finland",
+            city: "Helsinki",
+            lat: 60.15,
+            lon: 25.03,
+            rank: 1
+        }, {
+            country: "France",
+            city: "Paris",
+            lat: 48.50,
+            lon: 2.20,
+            rank: 1
+        }, {
+            country: "French Guiana",
+            city: "Cayenne",
+            lat: 5.05,
+            lon: -52.18,
+            rank: 3
+        }, {
+            country: "French Polynesia",
+            city: "Papeete",
+            lat: -17.32,
+            lon: -149.34,
+            rank: 3
+        }, {
+            country: "Gabon",
+            city: "Libreville",
+            lat: 0.25,
+            lon: 9.26,
+            rank: 3
+        }, {
+            country: "Gambia",
+            city: "Banjul",
+            lat: 13.28,
+            lon: -16.40,
+            rank: 3
+        }, {
+            country: "Georgia",
+            city: "T'bilisi",
+            lat: 41.43,
+            lon: 44.50,
+            rank: 2
+        }, {
+            country: "Macao",
+            city: "Macau",
+            lat: 22.12,
+            lon: 113.33,
+            rank: 3
+        }, {
+            country: "Republic of Moldova",
+            city: "Chisinau",
+            lat: 47.02,
+            lon: 28.50,
+            rank: 3
+        }, {
+            country: "Germany",
+            city: "Berlin",
+            lat: 52.30,
+            lon: 13.25,
+            rank: 1
+        }, {
+            country: "Ghana",
+            city: "Accra",
+            lat: 5.35,
+            lon: -0.06,
+            rank: 3
+        }, {
+            country: "Greece",
+            city: "Athens",
+            lat: 37.58,
+            lon: 23.46,
+            rank: 1
+        }, {
+            country: "Greenland",
+            city: "Nuuk",
+            lat: 64.10,
+            lon: -51.35,
+            rank: 2
+        }, {
+            country: "Guadeloupe",
+            city: "Basse-Terre",
+            lat: 16.00,
+            lon: -61.44,
+            rank: 3
+        }, {
+            country: "Guatemala",
+            city: "Guatemala",
+            lat: 14.40,
+            lon: -90.22,
+            rank: 1
+        }, {
+            country: "Guernsey",
+            city: "St. Peter Port",
+            lat: 49.26,
+            lon: -2.33,
+            rank: 2
+        }, {
+            country: "Guinea",
+            city: "Conakry",
+            lat: 9.29,
+            lon: -13.49,
+            rank: 3
+        }, {
+            country: "Guinea-Bissau",
+            city: "Bissau",
+            lat: 11.45,
+            lon: -15.45,
+            rank: 3
+        }, {
+            country: "Guyana",
+            city: "Georgetown",
+            lat: 6.50,
+            lon: -58.12,
+            rank: 3
+        }, {
+            country: "Haiti",
+            city: "Port-au-Prince",
+            lat: 18.40,
+            lon: -72.20,
+            rank: 1
+        }, {
+            country: "Honduras",
+            city: "Tegucigalpa",
+            lat: 14.05,
+            lon: -87.14,
+            rank: 1
+        }, {
+            country: "Hungary",
+            city: "Budapest",
+            lat: 47.29,
+            lon: 19.05,
+            rank: 1
+        }, {
+            country: "Iceland",
+            city: "Reykjavik",
+            lat: 64.10,
+            lon: -21.57,
+            rank: 1
+        }, {
+            country: "India",
+            city: "New Delhi",
+            lat: 28.37,
+            lon: 77.13,
+            rank: 1
+        }, {
+            country: "Indonesia",
+            city: "Jakarta",
+            lat: -6.09,
+            lon: 106.49,
+            rank: 1
+        }, {
+            country: "Iran",
+            city: "Tehran",
+            lat: 35.44,
+            lon: 51.30,
+            rank: 1
+        }, {
+            country: "Iraq",
+            city: "Baghdad",
+            lat: 33.20,
+            lon: 44.30,
+            rank: 1
+        }, {
+            country: "Ireland",
+            city: "Dublin",
+            lat: 53.21,
+            lon: -6.15,
+            rank: 1
+        }, {
+            country: "Israel",
+            city: "Jerusalem",
+            lat: 31.47,
+            lon: 35.12,
+            rank: 1
+        }, {
+            country: "Italy",
+            city: "Rome",
+            lat: 41.54,
+            lon: 12.29,
+            rank: 1
+        }, {
+            country: "Japan",
+            city: "Tokyo",
+            lat: 35.41,
+            lon: 139.41,
+            rank: 1
+        }, {
+            country: "Jamaica",
+            city: "Kingston",
+            lat: 18.00,
+            lon: -76.50,
+            rank: 1
+        }, {
+            country: "Jordan",
+            city: "Amman",
+            lat: 31.57,
+            lon: 35.52,
+            rank: 2
+        }, {
+            country: "Kazakhstan",
+            city: "Astana",
+            lat: 51.10,
+            lon: 71.30,
+            rank: 2
+        }, {
+            country: "Kenya",
+            city: "Nairobi",
+            lat: -1.17,
+            lon: 36.48,
+            rank: 1
+        }, {
+            country: "Kiribati",
+            city: "Tarawa",
+            lat: 1.30,
+            lon: 173.00,
+            rank: 2
+        }, {
+            country: "Kuwait",
+            city: "Kuwait",
+            lat: 29.30,
+            lon: 48.00,
+            rank: 2
+        }, {
+            country: "Kyrgyzstan",
+            city: "Bishkek",
+            lat: 42.54,
+            lon: 74.46,
+            rank: 3
+        }, {
+            country: "Laos",
+            city: "Vientiane",
+            lat: 17.58,
+            lon: 102.36,
+            rank: 1
+        }, {
+            country: "Latvia",
+            city: "Riga",
+            lat: 56.53,
+            lon: 24.08,
+            rank: 2
+        }, {
+            country: "Lebanon",
+            city: "Beirut",
+            lat: 33.53,
+            lon: 35.31,
+            rank: 1
+        }, {
+            country: "Lesotho",
+            city: "Maseru",
+            lat: -29.18,
+            lon: 27.30,
+            rank: 3
+        }, {
+            country: "Liberia",
+            city: "Monrovia",
+            lat: 6.18,
+            lon: -10.47,
+            rank: 2
+        }, {
+            country: "Libya",
+            city: "Tripoli",
+            lat: 32.54,
+            lon: 13.11,
+            rank: 2
+        }, {
+            country: "Liechtenstein",
+            city: "Vaduz",
+            lat: 47.08,
+            lon: 9.31,
+            rank: 2
+        }, {
+            country: "Lithuania",
+            city: "Vilnius",
+            lat: 54.38,
+            lon: 25.19,
+            rank: 2
+        }, {
+            country: "Luxembourg",
+            city: "Luxembourg",
+            lat: 49.37,
+            lon: 6.09,
+            rank: 1
+        }, {
+            country: "Madagascar",
+            city: "Antananarivo",
+            lat: -18.55,
+            lon: 47.31,
+            rank: 2
+        }, {
+            country: "Malawi",
+            city: "Lilongwe",
+            lat: -14.00,
+            lon: 33.48,
+            rank: 3
+        }, {
+            country: "Malaysia",
+            city: "Kuala Lumpur",
+            lat: 3.09,
+            lon: 101.41,
+            rank: 1
+        }, {
+            country: "Maldives",
+            city: "Male",
+            lat: 4.00,
+            lon: 73.28,
+            rank: 2
+        }, {
+            country: "Mali",
+            city: "Bamako",
+            lat: 12.34,
+            lon: -7.55,
+            rank: 3
+        }, {
+            country: "Malta",
+            city: "Valletta",
+            lat: 35.54,
+            lon: 14.31,
+            rank: 2
+        }, {
+            country: "Martinique",
+            city: "Fort-de-France",
+            lat: 14.36,
+            lon: -61.02,
+            rank: 3
+        }, {
+            country: "Mauritania",
+            city: "Nouakchott",
+            lat: -20.10,
+            lon: 57.30,
+            rank: 3
+        }, {
+            country: "Mayotte",
+            city: "Mamoudzou",
+            lat: -12.48,
+            lon: 45.14,
+            rank: 3
+        }, {
+            country: "Mexico",
+            city: "Mexico",
+            lat: 19.20,
+            lon: -99.10,
+            rank: 1
+        }, {
+            country: "Fed. States of Micronesia",
+            city: "Palikir",
+            lat: 6.55,
+            lon: 158.09,
+            rank: 3
+        }, {
+            country: "Mozambique",
+            city: "Maputo",
+            lat: -25.58,
+            lon: 32.32,
+            rank: 2
+        }, {
+            country: "Myanmar",
+            city: "Yangon",
+            lat: 16.45,
+            lon: 96.20,
+            rank: 3
+        }, {
+            country: "Namibia",
+            city: "Windhoek",
+            lat: -22.35,
+            lon: 17.04,
+            rank: 2
+        }, {
+            country: "Nepal",
+            city: "Kathmandu",
+            lat: 27.45,
+            lon: 85.20,
+            rank: 1
+        }, {
+            country: "Netherlands Antilles",
+            city: "Willemstad",
+            lat: 12.05,
+            lon: -69.00,
+            rank: 3
+        }, {
+            country: "Netherlands",
+            city: "Amsterdam",
+            lat: 52.23,
+            lon: 4.54,
+            rank: 1
+        }, {
+            country: "New Caledonia",
+            city: "Noumea",
+            lat: -22.17,
+            lon: 166.30,
+            rank: 2
+        }, {
+            country: "New Zealand",
+            city: "Wellington",
+            lat: -41.19,
+            lon: 174.46,
+            rank: 1
+        }, {
+            country: "Nicaragua",
+            city: "Managua",
+            lat: 12.06,
+            lon: -86.20,
+            rank: 2
+        }, {
+            country: "Niger",
+            city: "Niamey",
+            lat: 13.27,
+            lon: 2.06,
+            rank: 2
+        }, {
+            country: "Nigeria",
+            city: "Abuja",
+            lat: 9.05,
+            lon: 7.32,
+            rank: 2
+        }, {
+            country: "Norfolk Island",
+            city: "Kingston",
+            lat: -45.20,
+            lon: 168.43,
+            rank: 3
+        }, {
+            country: "Northern Mariana Islands",
+            city: "Saipan",
+            lat: 15.12,
+            lon: 145.45,
+            rank: 3
+        }, {
+            country: "Norway",
+            city: "Oslo",
+            lat: 59.55,
+            lon: 10.45,
+            rank: 1
+        }, {
+            country: "Oman",
+            city: "Masqat",
+            lat: 23.37,
+            lon: 58.36,
+            rank: 2
+        }, {
+            country: "Pakistan",
+            city: "Islamabad",
+            lat: 33.40,
+            lon: 73.10,
+            rank: 1
+        }, {
+            country: "Palau",
+            city: "Koror",
+            lat: 7.20,
+            lon: 134.28,
+            rank: 3
+        }, {
+            country: "Panama",
+            city: "Panama",
+            lat: 9.00,
+            lon: -79.25,
+            rank: 1
+        }, {
+            country: "Papua New Guinea",
+            city: "Port Moresby",
+            lat: -9.24,
+            lon: 147.08,
+            rank: 1
+        }, {
+            country: "Paraguay",
+            city: "Asuncion",
+            lat: -25.10,
+            lon: -57.30,
+            rank: 1
+        }, {
+            country: "Peru",
+            city: "Lima",
+            lat: -12.00,
+            lon: -77.00,
+            rank: 1
+        }, {
+            country: "Philippines",
+            city: "Manila",
+            lat: 14.40,
+            lon: 121.03,
+            rank: 1
+        }, {
+            country: "Poland",
+            city: "Warsaw",
+            lat: 52.13,
+            lon: 21.00,
+            rank: 1
+        }, {
+            country: "Portugal",
+            city: "Lisbon",
+            lat: 38.42,
+            lon: -9.10,
+            rank: 1
+        }, {
+            country: "Puerto Rico",
+            city: "San Juan",
+            lat: 18.28,
+            lon: -66.07,
+            rank: 2
+        }, {
+            country: "Qatar",
+            city: "Doha",
+            lat: 25.15,
+            lon: 51.35,
+            rank: 2
+        }, {
+            country: "Rawanda",
+            city: "Kigali",
+            lat: -1.59,
+            lon: 30.04,
+            rank: 2
+        }, {
+            country: "Republic of Korea",
+            city: "Seoul",
+            lat: 37.31,
+            lon: 126.58,
+            rank: 1
+        }, {
+            country: "Romania",
+            city: "Bucuresti",
+            lat: 44.27,
+            lon: 26.10,
+            rank: 1
+        }, {
+            country: "Russian Federation",
+            city: "Moskva",
+            lat: 55.45,
+            lon: 37.35,
+            rank: 1
+        }, {
+            country: "Saint Kitts and Nevis",
+            city: "Basseterre",
+            lat: 17.17,
+            lon: -62.43,
+            rank: 3
+        }, {
+            country: "Saint Lucia",
+            city: "Castries",
+            lat: 14.02,
+            lon: -60.58,
+            rank: 3
+        }, {
+            country: "Saint Pierre and Miquelon",
+            city: "Saint-Pierre",
+            lat: 46.46,
+            lon: -56.12,
+            rank: 3
+        }, {
+            country: "Saint Vincent ...",
+            city: "Kingstown",
+            lat: 13.10,
+            lon: -61.10,
+            rank: 3
+        }, {
+            country: "Samoa",
+            city: "Apia",
+            lat: -13.50,
+            lon: -171.50,
+            rank: 3
+        }, {
+            country: "San Marino",
+            city: "San Marino",
+            lat: 43.55,
+            lon: 12.30,
+            rank: 2
+        }, {
+            country: "Sao Tome and Principe",
+            city: "Sao Tome",
+            lat: 0.10,
+            lon: 6.39,
+            rank: 3
+        }, {
+            country: "Saudi Arabia",
+            city: "Riyadh",
+            lat: 24.41,
+            lon: 46.42,
+            rank: 1
+        }, {
+            country: "Senegal",
+            city: "Dakar",
+            lat: 14.34,
+            lon: -17.29,
+            rank: 2
+        }, {
+            country: "Sierra Leone",
+            city: "Freetown",
+            lat: 8.30,
+            lon: -13.17,
+            rank: 2
+        }, {
+            country: "Slovakia",
+            city: "Bratislava",
+            lat: 48.10,
+            lon: 17.07,
+            rank: 2
+        }, {
+            country: "Slovenia",
+            city: "Ljubljana",
+            lat: 46.04,
+            lon: 14.33,
+            rank: 2
+        }, {
+            country: "Solomon Islands",
+            city: "Honiara",
+            lat: -9.27,
+            lon: 159.57,
+            rank: 3
+        }, {
+            country: "Somalia",
+            city: "Mogadishu",
+            lat: 2.02,
+            lon: 45.25,
+            rank: 2
+        }, {
+            country: "South Africa",
+            city: "Pretoria",
+            lat: -25.44,
+            lon: 28.12,
+            rank: 1
+        }, {
+            country: "Spain",
+            city: "Madrid",
+            lat: 40.25,
+            lon: -3.45,
+            rank: 1
+        }, {
+            country: "Sudan",
+            city: "Khartoum",
+            lat: 15.31,
+            lon: 32.35,
+            rank: 1
+        }, {
+            country: "Suriname",
+            city: "Paramaribo",
+            lat: 5.50,
+            lon: -55.10,
+            rank: 2
+        }, {
+            country: "Swaziland",
+            city: "Mbabane",
+            lat: -26.18,
+            lon: 31.06,
+            rank: 2
+        }, {
+            country: "Sweden",
+            city: "Stockholm",
+            lat: 59.20,
+            lon: 18.03,
+            rank: 1
+        }, {
+            country: "Switzerland",
+            city: "Bern",
+            lat: 46.57,
+            lon: 7.28,
+            rank: 1
+        }, {
+            country: "Syrian Arab Republic",
+            city: "Damascus",
+            lat: 33.30,
+            lon: 36.18,
+            rank: 2
+        }, {
+            country: "Tajikistan",
+            city: "Dushanbe",
+            lat: 38.33,
+            lon: 68.48,
+            rank: 2
+        }, {
+            country: "Thailand",
+            city: "Bangkok",
+            lat: 13.45,
+            lon: 100.35,
+            rank: 1
+        }, {
+            country: "Republic of Macedonia",
+            city: "Skopje",
+            lat: 42.01,
+            lon: 21.26,
+            rank: 2
+        }, {
+            country: "Togo",
+            city: "Lome",
+            lat: 6.09,
+            lon: 1.20,
+            rank: 3
+        }, {
+            country: "Tonga",
+            city: "Nuku'alofa",
+            lat: -21.10,
+            lon: -174.00,
+            rank: 3
+        }, {
+            country: "Tunisia",
+            city: "Tunis",
+            lat: 36.50,
+            lon: 10.11,
+            rank: 1
+        }, {
+            country: "Turkey",
+            city: "Ankara",
+            lat: 39.57,
+            lon: 32.54,
+            rank: 1
+        }, {
+            country: "Turkmenistan",
+            city: "Ashgabat",
+            lat: 38.00,
+            lon: 57.50,
+            rank: 2
+        }, {
+            country: "Tuvalu",
+            city: "Funafuti",
+            lat: -8.31,
+            lon: 179.13,
+            rank: 3
+        }, {
+            country: "Uganda",
+            city: "Kampala",
+            lat: 0.20,
+            lon: 32.30,
+            rank: 1
+        }, {
+            country: "Ukraine",
+            city: "Kiev",
+            lat: 50.30,
+            lon: 30.28,
+            rank: 1
+        }, {
+            country: "United Arab Emirates",
+            city: "Abu Dhabi",
+            lat: 24.28,
+            lon: 54.22,
+            rank: 1
+        }, {
+            country: "United Kingdom",
+            city: "London",
+            lat: 51.36,
+            lon: -0.05,
+            rank: 1
+        }, {
+            country: "Tanzania",
+            city: "Dodoma",
+            lat: -6.08,
+            lon: 35.45,
+            rank: 2
+        }, {
+            country: "USA",
+            city: "Washington DC",
+            lat: 39.91,
+            lon: -77.02,
+            rank: 1
+        }, {
+            country: "Virgin Islands",
+            city: "Charlotte Amalie",
+            lat: 18.21,
+            lon: -64.56,
+            rank: 3
+        }, {
+            country: "Uruguay",
+            city: "Montevideo",
+            lat: -34.50,
+            lon: -56.11,
+            rank: 1
+        }, {
+            country: "Uzbekistan",
+            city: "Tashkent",
+            lat: 41.20,
+            lon: 69.10,
+            rank: 2
+        }, {
+            country: "Vanuatu",
+            city: "Port-Vila",
+            lat: -17.45,
+            lon: 168.18,
+            rank: 3
+        }, {
+            country: "Venezuela",
+            city: "Caracas",
+            lat: 10.30,
+            lon: -66.55,
+            rank: 1
+        }, {
+            country: "Viet Nam",
+            city: "Hanoi",
+            lat: 21.05,
+            lon: 105.55,
+            rank: 1
+        }, {
+            country: "Yugoslavia",
+            city: "Belgrade",
+            lat: 44.50,
+            lon: 20.37,
+            rank: 1
+        }, {
+            country: "Zambia",
+            city: "Lusaka",
+            lat: -15.28,
+            lon: 28.16,
+            rank: 2
+        }, {
+            country: "Zimbabwe",
+            city: "Harare",
+            lat: -17.43,
+            lon: 31.02,
+            rank: 1
+        }];
+
+    var freeCityList = [];
+
+    function patchLatLonForCity(loc) {
+        var latNum = 0;
+        var lonNum = 0;
+
+        if (loc.lat > 0) {
+            latNum = Math.floor(loc.lat);
+        } else {
+            latNum = Math.ceil(loc.lat);
+        }
+        if (loc.lon > 0) {
+            lonNum = Math.floor(loc.lon);
+        } else {
+            lonNum = Math.ceil(loc.lon);
+        }
+
+        loc.lat = (latNum + (loc.lat - latNum) / 0.6);
+        loc.lon = (lonNum + (loc.lon - lonNum) / 0.6);
+    }
+
+    function patchLatLon() {
+        for (var i = cityList.length - 1; i >= 0; i--) {
+            patchLatLonForCity(cityList[i]);
+        }
+
+        cityList.sort(function (a, b) {
+            return a.lon - b.lon;
+        });
+    }
+
+    function removeCityFromList(city, cityList) {
+        var index = cityList.indexOf(city);
+        if (index == -1)
+            alert("city not in list");
+
+        cityList.splice(index, 1);
+    }
+
+    function latLonToXY(lat, lon) {
+        return {
+            x: mapWidth * (lon / 360 + 0.5),
+            y: mapHeight * (0.5 - lat / 180)
+        };
+    }
+
+    // return the lat direction from A to B
+    function diffLon(lonA, lonB) {
+        var diff = lonB - lonA;
+        if (diff < -180)
+            return 360 + diff;
+        if (diff > 180)
+            return diff - 360;
+        return diff;
+    }
+
+    function calculateLatLonDistance(from, to) {
+        var R = 6371;
+        var fromLat = from.lat / 180 * Math.PI;
+        var fromLon = from.lon / 180 * Math.PI;
+        var toLat = to.lat / 180 * Math.PI;
+        var toLon = to.lon / 180 * Math.PI;
+        var deltaLat = (toLat - fromLat) * 0.5;
+        var deltaLon = (toLon - fromLon) * 0.5;
+        var sinDeltaLon = Math.sin(deltaLon);
+        var sinDeltaLat = Math.sin(deltaLat);
+        var a = sinDeltaLat * sinDeltaLat + Math.cos(fromLat) * Math.cos(toLat) * sinDeltaLon * sinDeltaLon;
+        var b = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1.0 - a));
+        return Math.round(R * b);
+    }
+
+    function drawRoute(from, to, col) {
+        var fromXY = latLonToXY(from.lat, from.lon);
+        var toXY = latLonToXY(to.lat, to.lon);
+
+        mapCtx.strokeStyle = col;
+        mapCtx.lineWidth = mapLineWidth;
+        mapCtx.beginPath();
+        mapCtx.moveTo(fromXY.x, fromXY.y);
+
+        if (to.lon > from.lon) {
+            mapCtx.lineTo(toXY.x, toXY.y);
+        } else {
+            // wrap
+            mapCtx.lineTo(toXY.x + mapWidth, toXY.y);
+            mapCtx.moveTo(fromXY.x - mapWidth, fromXY.y);
+            mapCtx.lineTo(toXY.x, toXY.y);
+        }
+        mapCtx.stroke();
+    }
+
+    function selectDestinationInternal(index) {
+        var destination = itinerary.destinationList[index];
+
+        // overwrite old city circle - so we don't get confused
+        if (itinerary.from != itinerary.home) {
+            drawCityCircle(itinerary.from, mapDotRadius, "#f04000");
+        }
+
+        if (index != itinerary.winDestination) {
+            gameState = 2 /* Lose */;
+            drawRoute(destination, itinerary.from, "white"); // draw from west to east
+        } else {
+            itinerary.distance += calculateLatLonDistance(itinerary.from, destination);
+            itinerary.visited++;
+            drawRoute(itinerary.from, destination, "#f04000");
+            itinerary.from = destination;
+            removeCityFromList(destination, freeCityList);
+            drawCityCircle(destination, mapDotRadius, "white");
+
+            if (freeCityList.length == 0) {
+                gameState = 3 /* Win */;
+            } else {
+                pickTwoDestinations(itinerary.from);
+            }
+        }
+    }
+
+    function selectDestination() {
+        var index = this.getAttribute("data-index");
+        var destination = itinerary.destinationList[index];
+
+        selectDestinationInternal(index);
+        itinerary.bonus = Math.floor(itinerary.visited * LOSE_BONUS_RATIO);
+
+        centerMapOnCity(destination);
+        updateHTML();
+    }
+
+    function setupHTML() {
+        var destinationElements = document.getElementsByClassName("destination");
+        for (var i = destinationElements.length - 1; i >= 0; i--) {
+            destinationElements[i].addEventListener("click", selectDestination);
+        }
+
+        document.getElementById("win").addEventListener("click", restartGame);
+        document.getElementById("lose").addEventListener("click", restartGame);
+        document.getElementById("help").addEventListener("click", resumeGame);
+    }
+
+    function updateHTML() {
+        var FADED = "0.4";
+        document.getElementById("home").innerHTML = itinerary.home.city + " (" + itinerary.home.country + ")";
+        document.getElementById("distance").innerHTML = itinerary.distance.toString() + " km";
+        document.getElementById("visited").innerHTML = itinerary.visited.toString();
+        document.getElementById("from").innerHTML = itinerary.from.city + " (" + itinerary.from.country + ")";
+        document.getElementById("bonus").innerHTML = itinerary.bonus.toString();
+
+        for (var i = 0; i < itinerary.destinationList.length; i++) {
+            var destination = itinerary.destinationList[i];
+            var destinationStr = "";
+            if (destination != null) {
+                destinationStr = itinerary.destinationList[i].city + "<br />(<span class=\"countryFont\">" + itinerary.destinationList[i].country + "</span>)";
+            }
+
+            var destinationElem = document.getElementById("destination" + (i + 1));
+            destinationElem.innerHTML = destinationStr;
+        }
+
+        var helpDisplay = "none";
+        var winDisplay = "none";
+        var loseDisplay = "none";
+        var destination1Opacity = FADED;
+        var destination2Opacity = FADED;
+
+        switch (gameState) {
+            case 0 /* NewGame */:
+                helpDisplay = "block";
+                break;
+
+            case 1 /* Normal */:
+                destination1Opacity = "1.0";
+                destination2Opacity = "1.0";
+                break;
+
+            case 3 /* Win */:
+                winDisplay = "block";
+                break;
+
+            case 2 /* Lose */:
+                loseDisplay = "block";
+                break;
+        }
+
+        document.getElementById("destination1").style.opacity = destination1Opacity;
+        document.getElementById("destination2").style.opacity = destination2Opacity;
+        document.getElementById("help").style.display = helpDisplay;
+        document.getElementById("win").style.display = winDisplay;
+        document.getElementById("lose").style.display = loseDisplay;
+    }
+
+    function centerMapOnCity(city) {
+        var pos = latLonToXY(city.lat, city.lon);
+
+        var scale = mapViewElement.height / mapHeight;
+        var offset = mapViewElement.width * 0.5 - pos.x * scale;
+        mapViewCtx.drawImage(mapCanvas, offset, 0, mapWidth * scale, mapHeight * scale);
+        mapViewCtx.drawImage(mapCanvas, offset - mapWidth * scale, 0, mapWidth * scale, mapHeight * scale);
+        mapViewCtx.drawImage(mapCanvas, offset + mapWidth * scale, 0, mapWidth * scale, mapHeight * scale);
+    }
+
+    function drawCityCircle(city, r, col) {
+        var pos = latLonToXY(city.lat, city.lon);
+
+        mapCtx.strokeStyle = "#000000";
+        mapCtx.fillStyle = col;
+        mapCtx.lineWidth = 2;
+        mapCtx.beginPath();
+        mapCtx.arc(pos.x, pos.y, r, 0, 2 * Math.PI);
+        mapCtx.stroke();
+        mapCtx.fill();
+    }
+
+    function selectCity(cityName, cityList) {
+        for (var i = cityList.length - 1; i >= 0; i--) {
+            if (cityList[i].city == cityName)
+                return cityList[i];
+        }
+
+        return null;
+    }
+
+    function selectRandomCity(cityList) {
+        return cityList[Math.floor(Math.random() * cityList.length)];
+    }
+
+    function getBestCities(city, distanceFunc) {
+        var RANK_WEIGHT = 50;
+        var WEIGHT_WINDOW = 40;
+        var MAX_CHOICES = 5;
+
+        for (var i = freeCityList.length - 1; i >= 0; i--) {
+            var other = freeCityList[i];
+            if (other == city) {
+                other.weight = 10000;
+            } else {
+                var distance = distanceFunc(other);
+                if (distance < 0) {
+                    distance += 360;
+                }
+                other.weight = other.rank * RANK_WEIGHT + distance;
+            }
+        }
+
+        var bestCityList = freeCityList.sort(function (a, b) {
+            return a.weight - b.weight;
+        });
+
+        // filter out cities that are outside the window, and limit the total number of choices
+        var maxWeight = bestCityList[0].weight + WEIGHT_WINDOW * bestCityList[0].rank;
+        bestCityList = bestCityList.filter(function (elem, index) {
+            return index < MAX_CHOICES && elem.weight < maxWeight;
+        });
+
+        return bestCityList;
+    }
+
+    function pickTwoDestinations(city) {
+        var MIN_LON = 10;
+
+        // we offset by MIN_LON, so we don't pick cities next to us
+        var eastCityList = getBestCities(city, function (other) {
+            return diffLon(city.lon, (other.lon - MIN_LON));
+        });
+
+        var westCityList = getBestCities(city, function (other) {
+            return -diffLon(city.lon, (other.lon + MIN_LON));
+        });
+
+        if (eastCityList.length == 0) {
+            alert("need a better algorithm for pickTwoDestinations()");
+            gameState = 2 /* Lose */;
+            return;
+        }
+
+        // chose random slot for east and west
+        var destIndex = Math.random() > 0.5 ? 1 : 0;
+        itinerary.destinationList[destIndex] = selectRandomCity(eastCityList);
+        itinerary.destinationList[1 - destIndex] = selectRandomCity(westCityList);
+        itinerary.winDestination = destIndex; // city to the east
+    }
+
+    function setup() {
+        patchLatLon();
+        setupHTML();
+    }
+
+    function baseGame() {
+        freeCityList.length = 0;
+        for (var i = 0; i < cityList.length; i++) {
+            freeCityList.push(cityList[i]);
+        }
+
+        // itinerary.home = selectCity("Pago Pago", freeCityList);
+        itinerary.home = selectRandomCity(freeCityList);
+        itinerary.from = itinerary.home;
+        itinerary.visited = 0;
+        itinerary.distance = 0;
+
+        removeCityFromList(itinerary.from, freeCityList);
+
+        mapCtx.drawImage(mapImg, 0, 0, mapWidth, mapHeight);
+        drawCityCircle(itinerary.home, mapDotRadius, "yellow");
+    }
+
+    function newGame() {
+        baseGame();
+        itinerary.bonus = 0;
+
+        pickTwoDestinations(itinerary.home);
+
+        centerMapOnCity(itinerary.from);
+
+        gameState = 0 /* NewGame */;
+        updateHTML();
+    }
+
+    function restartGame() {
+        baseGame();
+
+        for (var i = 0; i < itinerary.bonus; ++i) {
+            pickTwoDestinations(itinerary.from);
+            selectDestinationInternal(itinerary.winDestination);
+        }
+
+        pickTwoDestinations(itinerary.from);
+        centerMapOnCity(itinerary.from);
+
+        gameState = 1 /* Normal */;
+        updateHTML();
+    }
+
+    function resumeGame() {
+        gameState = 1 /* Normal */;
+        updateHTML();
+    }
+
+    window.onload = function () {
+        setup();
+
+        mapCanvas = document.createElement("canvas");
+        mapCtx = mapCanvas.getContext("2d");
+
+        mapViewElement = document.getElementById("mapView");
+        mapViewCtx = mapViewElement.getContext("2d");
+
+        mapImg = new Image();
+        mapImg.onload = function () {
+            mapWidth = mapImg.width;
+            mapHeight = mapImg.height;
+            mapCanvas.width = mapWidth;
+            mapCanvas.height = mapHeight;
+            mapDotRadius = mapHeight * 0.02;
+            mapLineWidth = mapHeight * 0.01;
+
+            newGame();
+        };
+        mapImg.src = "world-map-b1.jpg";
+    };
+})(FlyEast || (FlyEast = {}));

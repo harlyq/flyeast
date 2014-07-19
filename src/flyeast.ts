@@ -1371,10 +1371,11 @@ module FlyEast {
 
     function selectDestination() {
         var index: number = this.getAttribute("data-index");
+        var destination: Place = itinerary.destinationList[index];
+
         selectDestinationInternal(index);
         itinerary.bonus = Math.floor(itinerary.visited * LOSE_BONUS_RATIO);
 
-        var destination: Place = itinerary.destinationList[index];
         centerMapOnCity(destination);
         updateHTML();
     }
@@ -1581,6 +1582,7 @@ module FlyEast {
             selectDestinationInternal(itinerary.winDestination);
         }
 
+        pickTwoDestinations(itinerary.from);
         centerMapOnCity(itinerary.from);
 
         gameState = GameState.Normal;
